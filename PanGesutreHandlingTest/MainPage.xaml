@@ -6,7 +6,12 @@
              BackgroundColor="#6495ED">
 
     <Grid>
-        <local:DragableView />
+        <Grid RowDefinitions="Auto,Auto,Auto" Margin="16" RowSpacing="8">
+            <Label Text="Main" Grid.Row="0" TextColor="White" IsVisible="{Binding Source={x:Reference dragableView}, Path=IsMainGestureRunning}" />
+            <Label Text="Horizontal" Grid.Row="1" TextColor="White" IsVisible="{Binding Source={x:Reference dragableView}, Path=IsHorizontalGestureRunning}" />
+            <Label Text="Vertical" Grid.Row="2" TextColor="White" IsVisible="{Binding Source={x:Reference dragableView}, Path=IsVerticalGestureRunning}" />
+        </Grid>
+        <local:DragableView x:Name="dragableView" />
     </Grid>
 
 </ContentPage>

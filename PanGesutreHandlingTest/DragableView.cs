@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -7,8 +8,57 @@ using System.Threading.Tasks;
 
 namespace PanGesutreHandlingTest;
 
-internal class DragableView : Grid
+internal class DragableView : Grid, INotifyPropertyChanged 
 {
+    public event PropertyChangedEventHandler PropertyChanged;
+
+
+    bool isMainGestureRunning = false;
+    public bool IsMainGestureRunning
+    {
+        get => isMainGestureRunning;
+        set
+        {
+            if (isMainGestureRunning != value)
+            {
+                isMainGestureRunning = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsMainGestureRunning)));
+            }
+        }
+    }
+
+
+    bool isHorizontalGestureRunning = false;
+    public bool IsHorizontalGestureRunning
+    {
+        get => isHorizontalGestureRunning;
+        set
+        {
+            if (isHorizontalGestureRunning != value)
+            {
+                isHorizontalGestureRunning = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsHorizontalGestureRunning)));
+            }
+        }
+    }
+
+
+    bool isVerticalGestureRunning = false;
+    public bool IsVerticalGestureRunning
+    {
+        get => isVerticalGestureRunning;
+        set
+        {
+            if (isVerticalGestureRunning != value)
+            {
+                isVerticalGestureRunning = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(IsVerticalGestureRunning)));
+            }
+        }
+    }
+
+
+
     double lastMainTotalX = 0.0;
     double lastMainTotalY = 0.0;
     double lastHorizontalTotalX = 0.0;
@@ -94,11 +144,15 @@ internal class DragableView : Grid
 
         if (e.StatusType == GestureStatus.Started)
         {
+            IsMainGestureRunning = false;
+
             lastMainTotalX = 0.0;
             lastMainTotalY = 0.0;
         }
         else if (e.StatusType == GestureStatus.Running)
         {
+            IsMainGestureRunning = true;
+
             var deltaX = e.TotalX - lastMainTotalX;
             var deltaY = e.TotalY - lastMainTotalY;
 
@@ -138,11 +192,15 @@ internal class DragableView : Grid
         }
         else if (e.StatusType == GestureStatus.Completed)
         {
+            IsMainGestureRunning = false;
+
             lastMainTotalX = 0.0;
             lastMainTotalY = 0.0;
         }
         else if (e.StatusType == GestureStatus.Canceled)
         {
+            IsMainGestureRunning = false;
+
             lastMainTotalX = 0.0;
             lastMainTotalY = 0.0;
         }
@@ -155,10 +213,14 @@ internal class DragableView : Grid
 
         if (e.StatusType == GestureStatus.Started)
         {
+            IsHorizontalGestureRunning = false;
+
             lastHorizontalTotalX = 0.0;
         }
         else if (e.StatusType == GestureStatus.Running)
         {
+            IsHorizontalGestureRunning = true;
+
             var deltaX = e.TotalX - lastHorizontalTotalX;
             
             var tempX = TranslationX + deltaX;
@@ -185,10 +247,14 @@ internal class DragableView : Grid
         }
         else if (e.StatusType == GestureStatus.Completed)
         {
+            IsHorizontalGestureRunning = false;
+
             lastHorizontalTotalX = 0.0;
         }
         else if (e.StatusType == GestureStatus.Canceled)
         {
+            IsHorizontalGestureRunning = false;
+
             lastHorizontalTotalX = 0.0;
         }
     }
@@ -200,10 +266,14 @@ internal class DragableView : Grid
 
         if (e.StatusType == GestureStatus.Started)
         {
+            IsVerticalGestureRunning = false;
+
             lastVerticalTotalY = 0.0;
         }
         else if (e.StatusType == GestureStatus.Running)
         {
+            IsVerticalGestureRunning = true;
+
             var deltaY = e.TotalY - lastVerticalTotalY;
 
             var tempY = TranslationY + deltaY;
@@ -228,10 +298,14 @@ internal class DragableView : Grid
         }
         else if (e.StatusType == GestureStatus.Completed)
         {
+            IsVerticalGestureRunning = false;
+
             lastVerticalTotalY = 0.0;
         }
         else if (e.StatusType == GestureStatus.Canceled)
         {
+            IsVerticalGestureRunning = false;
+
             lastVerticalTotalY = 0.0;
         }
 
